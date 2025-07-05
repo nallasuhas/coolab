@@ -6,9 +6,12 @@ import { RoomCard } from "./room-card";
 import { unstable_noStore } from "next/cache";
 import Image from "next/image";
 
-export default async function Home(props: { searchParams: { search: string } }) {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams?: { search?: string };
+}) {
   unstable_noStore();
-  const searchParams = props.searchParams;
   const rooms = await getRooms(searchParams?.search);
 
   return (
