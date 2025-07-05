@@ -25,6 +25,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { deleteAccountAction } from "./actions";
+import {
+  Navbar,
+  NavBody,
+  NavItems,
+  MobileNav,
+  NavbarLogo,
+  NavbarButton,
+  MobileNavHeader,
+  MobileNavToggle,
+  MobileNavMenu,
+} from "@/components/ui/resizable-navbar";
 
 function AccountDropdown() {
   const session = useSession();
@@ -62,7 +73,6 @@ function AccountDropdown() {
               <AvatarImage src={session.data?.user?.image ?? ""} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-
             {session.data?.user?.name}
           </Button>
         </DropdownMenuTrigger>
@@ -76,7 +86,6 @@ function AccountDropdown() {
           >
             <LogOutIcon className="mr-2" /> Sign Out
           </DropdownMenuItem>
-
           <DropdownMenuItem
             onClick={() => {
               setOpen(true);
@@ -93,47 +102,99 @@ function AccountDropdown() {
 export function Header() {
   const session = useSession();
   const isLoggedIn = !!session.data;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Only show nav items if logged in
+  const navItems = isLoggedIn
+    ? [
+        { name: "Browse", link: "/browse" },
+        { name: "Your Rooms", link: "/your-rooms" },
+      ]
+    : [];
 
   return (
-    <header className="bg-gray-100 py-2 dark:bg-gray-900 z-10 relative">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link
-          href="/"
-          className="flex gap-2 items-center text-xl hover:underline"
-        >
-          <Image
-            src="/icon.png"
-            width="60"
-            height="60"
-            alt="the application icon of a magnifying glass"
-          />
-          Coolab
-        </Link>
+    <div className="relative w-full">
+      <Navbar>
+        {/* Desktop Navigation */}
+        <NavBody>
+          <NavbarLogo />
+          <NavItems items={navItems} />
+          <div className="flex items-center gap-4 z-10">
+            {isLoggedIn ? (
+              <>
+                <AccountDropdown />
+              </>
+            ) : (
+              <NavbarButton
+                variant="secondary"
+                onClick={() => signIn()}
+                className="flex items-center gap-2"
+              >
+                <LogInIcon className="w-4 h-4" />
+                Login
+              </NavbarButton>
+            )}
+            <ModeToggle />
+          </div>
+        </NavBody>
 
-        <nav className="flex gap-8">
-          {isLoggedIn && (
-            <>
-              <Link className="hover:underline" href="/browse">
-                Browse
+        {/* Mobile Navigation */}
+        <MobileNav>
+          <MobileNavHeader>
+            <NavbarLogo />
+            <MobileNavToggle
+              isOpen={isMobileMenuOpen}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            />
+          </MobileNavHeader>
+
+          <MobileNavMenu
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(false)}
+          >
+            {navItems.map((item, idx) => (
+              <Link
+                key={`mobile-link-${idx}`}
+                href={item.link}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="relative text-neutral-600 dark:text-neutral-300"
+              >
+                <span className="block">{item.name}</span>
               </Link>
-
-              <Link className="hover:underline" href="/your-rooms">
-                Your Rooms
-              </Link>
-            </>
-          )}
-        </nav>
-
-        <div className="flex items-center gap-4">
-          {isLoggedIn && <AccountDropdown />}
-          {!isLoggedIn && (
-            <Button onClick={() => signIn()} variant="link">
-              <LogInIcon className="mr-2" /> Sign In
-            </Button>
-          )}
-          <ModeToggle />
-        </div>
-      </div>
-    </header>
+            ))}
+            <div className="flex w-full flex-col gap-4 mt-4">
+              {isLoggedIn ? (
+                <NavbarButton
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    signOut({ callbackUrl: "/" });
+                  }}
+                  variant="secondary"
+                  className="w-full flex items-center gap-2"
+                >
+                  <LogOutIcon className="w-4 h-4" />
+                  Sign Out
+                </NavbarButton>
+              ) : (
+                <NavbarButton
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    signIn();
+                  }}
+                  variant="primary"
+                  className="w-full flex items-center gap-2"
+                >
+                  <LogInIcon className="w-4 h-4" />
+                  Login
+                </NavbarButton>
+              )}
+            </div>
+            <div className="flex w-full justify-center mt-4">
+              <ModeToggle />
+            </div>
+          </MobileNavMenu>
+        </MobileNav>
+      </Navbar>
+    </div>
   );
 }
