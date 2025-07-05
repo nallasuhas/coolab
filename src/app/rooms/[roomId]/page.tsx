@@ -6,9 +6,9 @@ import { DevFinderVideo } from "./video-player";
 import { splitTags } from "@/lib/utils";
 import { unstable_noStore } from "next/cache";
 
-export default async function RoomPage({ params }: { params: { roomId: string } }) {
+export default async function RoomPage({ params }: { params: Promise<{ roomId: string }> }) {
   unstable_noStore();
-  const roomId = params.roomId;
+  const { roomId } = await params;
 
   const room = await getRoom(roomId);
 
