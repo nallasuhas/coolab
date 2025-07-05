@@ -9,10 +9,11 @@ import Image from "next/image";
 export default async function Home({
   searchParams,
 }: {
-  searchParams?: { search?: string };
+  searchParams: Promise<{ search?: string }>;
 }) {
   unstable_noStore();
-  const rooms = await getRooms(searchParams?.search);
+  const { search } = await searchParams;
+  const rooms = await getRooms(search);
 
   return (
     <main className="min-h-screen p-16">
