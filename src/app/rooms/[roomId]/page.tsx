@@ -8,8 +8,7 @@ import { unstable_noStore } from "next/cache";
 
 export default async function RoomPage(props: { params: { roomId: string } }) {
   unstable_noStore();
-  const params = await props.params;
-  const roomId = params.roomId;
+  const roomId = props.params.roomId;
 
   const room = await getRoom(roomId);
 
