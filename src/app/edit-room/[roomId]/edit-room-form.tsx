@@ -18,6 +18,9 @@ import { editRoomAction } from "./actions";
 import { useParams } from "next/navigation";
 import { Room } from "@/db/schema";
 import { toast } from "sonner"
+import { useTheme } from "next-themes";
+import { Card } from "@/components/ui/card";
+import { MagicCard } from "@/components/magicui/magic-card";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -27,6 +30,7 @@ const formSchema = z.object({
 });
 
 export function EditRoomForm({ room }: { room: Room }) {
+  const { theme } = useTheme();
   const params = useParams();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,6 +54,12 @@ export function EditRoomForm({ room }: { room: Room }) {
   }
 
   return (
+     <div className="min-h-screen flex items-center justify-center ">
+       <Card className="w-full max-w-md rounded-2xl shadow-xl border p-0">
+        <MagicCard
+          gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
+          className="p-0"
+        >
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
@@ -59,7 +69,7 @@ export function EditRoomForm({ room }: { room: Room }) {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Dev Finder Is Awesome" />
+                <Input {...field} placeholder="Coolab Is Awesome" />
               </FormControl>
               <FormDescription>This is your public room name.</FormDescription>
               <FormMessage />
@@ -96,7 +106,7 @@ export function EditRoomForm({ room }: { room: Room }) {
               <FormControl>
                 <Input
                   {...field}
-                  placeholder="https://github.com/webdevcody/dev-finder"
+                  placeholder="https://github.com/coolab"
                 />
               </FormControl>
               <FormDescription>
@@ -128,5 +138,8 @@ export function EditRoomForm({ room }: { room: Room }) {
         <Button type="submit">Submit</Button>
       </form>
     </Form>
+    </MagicCard>
+    </Card>
+    </div>
   );
 }
