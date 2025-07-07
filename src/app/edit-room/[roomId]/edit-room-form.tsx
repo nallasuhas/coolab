@@ -60,7 +60,9 @@ export function EditRoomForm({ room }: { room: Room }) {
           gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
           className="p-0"
         >
-    <Form {...form}>
+          <div className="p-8">
+             <h2 className="text-2xl font-bold mb-2 text-center">Edit Room</h2>
+         <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
@@ -90,7 +92,7 @@ export function EditRoomForm({ room }: { room: Room }) {
                 />
               </FormControl>
               <FormDescription>
-                Please describe what you are be coding on
+                Please describe what you are coding on
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -135,9 +137,10 @@ export function EditRoomForm({ room }: { room: Room }) {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="w-full py-3 text-lg font-semibold">Submit</Button>
       </form>
     </Form>
+    </div>
     </MagicCard>
     </Card>
     </div>

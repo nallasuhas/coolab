@@ -16,8 +16,8 @@ export default async function EditRoomPage({
   }
 
   return (
-    <div className="container mx-auto flex flex-col gap-8 pt-12 pb-24">
-      <h1 className="text-4xl font-bold">Edit Room</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center gap-12">
+      <h1 className="text-4xl font-bold text-center mb-4">Edit Room</h1>
       <EditRoomForm room={room} />
     </div>
   );
